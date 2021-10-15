@@ -96,7 +96,7 @@ class Refeição:
             porção.show()
 
 
-class Dia:
+class Dia(Refeição):
     """Conjunto de `Refeição`s.
 
     Parametros
@@ -111,25 +111,3 @@ class Dia:
     >>> Dia1 = Dia('dia_foda',
                    [r.almoço, r.lanche, r.janta, r.iorgas])
     """
-    def __init__(self, nome, refeição_list):
-        self.nome = nome
-        self.refeição_list = refeição_list
-
-    def show(self):
-        self.get_nutrition(verbose=True)
-
-    def get_nutrition(self, verbose=False):
-        soma = np.array((0., 0., 0., 0.))
-        for refeição in self.refeição_list:
-            soma += refeição.get_nutrition()
-        if verbose:
-            print('Dia - {}\n'
-                      'Calorias: {:.2f}kcal\n'
-                      'Proteínas: {:.2f}g\n'
-                      'Lipídios: {:.2f}g\n'
-                      'Carboidratos: {:.2f}g\n'.format(self.nome, *soma))
-        return soma
-
-    def show_each(self):
-        for refeição in self.refeição_list:
-            refeição.show()
