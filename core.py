@@ -36,7 +36,7 @@ class Porção:
 
     Exemplo
     -------
-    >>> porção_de_bacon = Porção(c.bacon_cru, 70)
+    >>> porção_de_abacate = Porção(abacate, 70)
     """
     def __init__(self, comida, quantity):
         self.comida = comida
@@ -104,11 +104,12 @@ class Dia:
         nome : str
             Nome da refeição.
         refeição_list: iterable
-            Conjunto de `Refeição`s compondo a refeição.
+            Conjunto de `Refeição`s que compõe o dia.
 
     Exemplo
     -------
-    >>> iorgas = Refeição('iorgas', [Porção(c.iogurte, 300), Porção(c.melão, 200)])
+    >>> Dia1 = Dia('dia_foda',
+                   [r.almoço, r.lanche, r.janta, r.iorgas])
     """
     def __init__(self, nome, refeição_list):
         self.nome = nome
