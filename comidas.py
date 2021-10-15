@@ -117,8 +117,6 @@ coco_ralado = Comida(
     'coco_ralado',
     np.array((67, 0.6, 6.7, 0.9)) / 12,
 )
-
-# cecília
 maionese_light = Comida(
     'maionese_light',
     np.array((238, 0.37, 22.2, 9.23)) / 100,
