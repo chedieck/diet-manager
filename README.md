@@ -13,4 +13,9 @@ uma `Semana` é um conjunto de dias;
 As classes `Refeição`, `Dia` e `Semana` são filhas de uma classe abstrata que funciona de forma recursiva chamada `RangoTree`.
 O esquema abaixo ilustra a ideia das `RangoTree`s (mais informação sobre pode ser encontrada no código (`core.py`)):
 
+<p align="center">
+  <img src="https://github.com/chedieck/diet-manager/blob/master/src/dieta-manager.drawio.png" />
+</p>
+
+
 O repositório contém o arquivo `comidas.py` contendo exemplos de ingredientes com suas informações nutricionais e o arquivo `rotina.py` contém exemplos de organizações de rotina: refeições, dias e semanas.
