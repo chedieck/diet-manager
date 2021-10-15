@@ -1,4 +1,5 @@
 import numpy as np
+import re
 
 
 class Comida:
@@ -42,6 +43,16 @@ class Porção:
         self.comida = comida
         self.quantity = quantity  # quantity in grams
 
+    def __str__(self):
+        return ('{}g de {:=^20}:\n'
+                'CAL: {:.2f}kcal, '
+                'PRO: {:.2f}g, '
+                'LIP: {:.2f}g, '
+                'CAR: {:.2f}g'.format(self.quantity,
+                                      self.comida.nome,
+                                      *self.get_nutrition()))
+
+
     def get_nutrition(self):
         return self.quantity * self.comida.array
 
@@ -49,14 +60,7 @@ class Porção:
         self.quantity = qnt
 
     def show(self):
-        print('{}g de {:=^20}:\n'
-              'CAL: {:.2f}kcal, '
-              'PRO: {:.2f}g, '
-              'LIP: {:.2f}g, '
-              'CAR: {:.2f}g'.format(self.quantity,
-                                    self.comida.nome,
-                                    *self.get_nutrition()))
-
+        print(str(self))
 
 class Refeição:
     """Conjunto de `Porção`s.
@@ -76,24 +80,58 @@ class Refeição:
         self.nome = nome
         self.porção_list = porção_list
 
+    @property
+    def title(self):
+        class_name = self.__class__.__name__
+        return f'> {self.nome} ({class_name})\n'
+
+    def __str__(self):
+        nutrition_arr = self.get_nutrition(verbose=True)
+        return (self.title +
+                '  Calorias: {:.2f}kcal\n'
+                '  Proteínas: {:.2f}g\n'
+                '  Lipídios: {:.2f}g\n'
+                '  Carboidratos: {:.2f}g\n'.format(*nutrition_arr))
+
     def get_nutrition(self, verbose=False):
-        soma = np.array((0., 0., 0., 0.))
+        total = np.array((0., 0., 0., 0.))
         for porção in self.porção_list:
-            soma += porção.get_nutrition()
-        if verbose:
-            print('Refeição - {}\n'
-                  'Calorias: {:.2f}kcal\n'
-                  'Proteínas: {:.2f}g\n'
-                  'Lipídios: {:.2f}g\n'
-                  'Carboidratos: {:.2f}g\n'.format(self.nome, *soma))
-        return soma
+            total += porção.get_nutrition()
+        return total
 
     def show(self):
-        self.get_nutrition(verbose=True)
+        print(str(self))
 
     def show_each(self):
         for porção in self.porção_list:
             porção.show()
+
+    def idented_str(self, n):
+        base = str(self)
+        # ident title
+        prefix = '----' * n if n else '>'
+        if n:
+            prefix = prefix[1:] + '>'
+        base = base.replace('>', prefix)
+
+        # ident nutrition
+        prefix = '\n  ' + n * '    '
+        base = re.sub(r'\n  ([A-Z])', prefix + r'\1', base)
+        return base
+
+
+    def get_tree_info(self, n=0, verbose=True):
+        to_print = self.idented_str(n)
+        for porção in self.porção_list:
+            if hasattr(porção, 'get_tree_info'):
+                to_print += porção.get_tree_info(n=n + 1,
+                                             verbose=False)
+            else:
+                to_print += ''# str(porção)
+
+        if verbose:
+            print(to_print)
+        return to_print
 
 
 class Dia(Refeição):
