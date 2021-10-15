@@ -52,6 +52,13 @@ class Porção:
 
 
     def __str__(self):
+        """Informação nutricional da porção.
+
+        'K' := Kilocalorias
+        'P' := Proteínas
+        'L' := Lipídios
+        'C' := Carboidratos
+        """
         nutrition = self.get_nutrition()
         calories = f'K {nutrition[0]:.2f}kcal'
         proteins = f'P {nutrition[1]:.2f}g'
@@ -125,6 +132,13 @@ class RangoTree(ABC):
         return '  +' + '\n  +'.join(map(str, self.porção_or_rango_list)) + '\n'
 
     def __str__(self):
+        """Informação nutricional da porção.
+
+        'K' := Kilocalorias
+        'P' := Proteínas
+        'L' := Lipídios
+        'C' := Carboidratos
+        """
         nutrition_arr = self.get_nutrition(verbose=True)
         separator = ''
         if self.has_porção_list():
