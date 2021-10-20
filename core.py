@@ -254,3 +254,91 @@ class Semana(RangoTree):
                    [d.segunda, d.terça, d.quarta, d.quinta, d.sexta, d.sábado, d.domingo]
                    )
     """
+
+
+class MacroMeta:
+    """
+    Meta de macros para atingir.
+
+    Define um limite superior e inferior para cada macro (kcal, proteínas,
+    lipídios e carboidratos). Não é necessário definir nenhum dos limites,
+    qualquer parametro que não for passado indicará que o macro referente
+    não é importante.
+
+    Parametros
+    ----------
+    kcal : Union[None, tuple[int]]
+        Limites para kilocalorias (min, max).
+    prot : Union[None, tuple[int]]
+        Limites para proteínas, em gramas (min, max).
+    lip : Union[None, tuple[int]]
+        Limites para lipídios, em gramas (min, max).
+    carb : Union[None, tuple[int]]
+        Limites para carboidratos, em gramas (min, max).
+
+    Exemplos
+    --------
+    >>> # mínimo de 2800 kcal, nenhum limite máximo.
+    >>> MacroMeta(kcal=(2800, None))
+    >>> # entre 1600 e 1900 kcal, máximo de 30g de carboidratos.
+    >>> m = MacroMeta(kcal=(1600, 1900),
+                  carb=(None, 30))
+    >>> m.check(d.segunda)
+    """
+
+    def __init__(self, kcal: tuple = None, prot: tuple = None, lip: tuple = None, carb: tuple = None):
+        self.metas_dict = {
+            'kcal': kcal,
+            'prot': prot,
+            'lip': lip,
+            'carb': carb,
+        }
+
+    def _unit_and_name_str(self, macro_key):
+        if macro_key == 'kcal':
+            return 'kcal'
+        if macro_key == 'prot':
+            return 'g de proteínas'
+        if macro_key == 'lip':
+            return 'g lipídeos'
+        if macro_key == 'carb':
+            return 'g de carboidratos'
+
+    def _get_macro_status_str(self, macro_key, valor):
+        macro_meta = self.metas_dict.get(macro_key)
+        if macro_meta is None:
+            return ""
+
+        limite_inferior = macro_meta[0]
+        limite_superior = macro_meta[1]
+        unit_and_name_str = self._unit_and_name_str(macro_key)
+
+        if limite_inferior:
+            if valor < limite_inferior:
+                return f"Faltam {limite_inferior - valor:.2f}{unit_and_name_str}.\n"
+        if limite_superior:
+            if valor > limite_superior:
+                return f"Extra {limite_inferior - valor:.2f}{unit_and_name_str}.\n"
+        return f"Objetivo atingido: {valor:.2f}{unit_and_name_str}"
+
+
+    def _get_macro_key_for_index(self, idx):
+        if idx == 0:
+            return 'kcal'
+        if idx == 1:
+            return 'prot'
+        if idx == 2:
+            return 'lip'
+        if idx == 3:
+            return 'carb'
+
+    def check(self, rango_tree):
+        total_str = ""
+        for idx, valor in enumerate(rango_tree.get_nutrition()):
+            macro_key = self._get_macro_key_for_index(idx)
+            total_str += self._get_macro_status_str(macro_key, valor)
+        total_str = total_str.rstrip('\n')
+
+        print(total_str)
+
+
