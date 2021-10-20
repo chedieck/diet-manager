@@ -10,7 +10,7 @@ class Comida:
     ----------
         nome : str
             Nome da comida
-        array : np.array
+        kplc_array : np.array
             Array contendo 4 valores, respectivamente:
             Kilocalorias, proteínas, lipídios e carboidratos **por grama** do alimento.
 
@@ -24,9 +24,10 @@ class Comida:
                              (75, 1.15, 6.21, 1.81)
                          ) / 100)
     """
-    def __init__(self, nome, array):
+    def __init__(self, nome, kplc_array):
         self.nome = nome
-        self.array = array
+        self.kplc_array = kplc_array
+
 
 class Porção:
     """Objeto contendo uma comida e a quantidade.
@@ -68,10 +69,11 @@ class Porção:
                 + f'{calories:<15} {proteins:<12} {lipids:<12} {carbs:<12}')
 
     def get_nutrition(self):
-        return self.quantity * self.comida.array
+        return self.quantity * self.comida.kplc_array
 
     def set_quantity(self, qnt):
         self.quantity = qnt
+
 
 class RangoTree(ABC):
     """Classe abstrata para agrupar `Porção`s ou `RangoTree`s.
